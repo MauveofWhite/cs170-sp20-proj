@@ -47,7 +47,9 @@ def solve(G):
 
     # Update
     update = True
+    # count = 0
     while update == True:
+        # count += 1
         avaliable_edge = T.copy()
         update = False
         updated = False     # as long as current tree is modified, this is set to be True
@@ -85,31 +87,33 @@ def solve(G):
 
         # Keep iterate
         update = updated
+        # print(count, "-th iteration")
 
     # T.remove_edge(0, 1) # leave node 0 alone with degree 0
     # T.remove_node(0) # remove e(0, 1) automatically
     # T.remove_node(0)
+
     return T
 
 # Here's an example of how to run your solver.
 
 # Usage: python3 solver.py test.in
 
-# if __name__ == '__main__':
-#     assert len(sys.argv) == 2
-#     path = sys.argv[1]
-#     G = read_input_file(path)
-#     T = solve(G)
-#     assert is_valid_network(G, T)
-#     print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
-#     write_output_file(T, 'out/test.out')
-#     # print(T)
-
-if __name__ == "__main__":
-    output_dir = "submission"
-    input_dir = "inputs"
-    for input_path in os.listdir(input_dir):
-        graph_name = input_path.split(".")[0]
-        G = read_input_file(f"{input_dir}/{input_path}")
-        T = solve(G)
-        write_output_file(T, f"{output_dir}/{graph_name}.out")
+if __name__ == '__main__':
+    assert len(sys.argv) == 2
+    path = sys.argv[1]
+    G = read_input_file(path)
+    T = solve(G)
+    assert is_valid_network(G, T)
+    print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
+    write_output_file(T, 'out/test.out')
+    # print(T)
+#
+# if __name__ == "__main__":
+#     output_dir = "outputs"
+#     input_dir = "inputs"
+#     for input_path in os.listdir(input_dir):
+#         graph_name = input_path.split(".")[0]
+#         G = read_input_file(f"{input_dir}/{input_path}")
+#         T = solve(G)
+#         write_output_file(T, f"{output_dir}/{graph_name}.out")

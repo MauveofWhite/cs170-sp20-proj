@@ -84,7 +84,7 @@ def solve(G):
 #     # print(T)
 
 if __name__ == "__main__":
-    output_dir = "submission"
+    output_dir = "outputs"
     input_dir = "inputs"
     for input_path in os.listdir(input_dir):
         graph_name = input_path.split(".")[0]
