@@ -80,8 +80,7 @@ def solve(G):
                 updated = True
                 # print(i, "               can remove ", e[0], " and ", e[1])
                 # print()
-                # continue      # do not start over
-                break           # start over
+                continue
 
         # Keep iterate
         update = updated
