@@ -6,10 +6,87 @@ import os
 from networkx.algorithms import approximation
 from networkx.algorithms.approximation import *
 
+# Find the maximum length of edge in G
 def max_edge(G):
     weights = [d for (u, v, d) in G.edges(data=True)]
     max_w = max([i.get('weight') for i in weights])     # eg, 1.5 in test.in
     return [[u, v] for (u, v, d) in G.edges(data=True) if d.get('weight') == max_w][0]      # return [2, 3] for test.in
+
+def set_mst(G, V):
+    # Construct the tree with shortest path
+    # (Minimum spanning tree within selected nodes)
+    update = True
+    mst = nx.minimum_spanning_tree(G)
+    nodes = [n for n in mst.nodes]
+
+    while update:
+        updated = False
+        for n in nodes:
+            # if the node is a leaf and not in dominating set, remove it
+            if mst.degree[n] == 1 and n not in V:
+                mst.remove_node(n)
+                nodes = [n for n in mst.nodes]
+                updated = True
+        update = updated
+    # return an MST of dominating set
+    return mst
+
+# Computes the length of a path
+def path_length(G, path):
+    weight = 0
+    for i in range(len(path)-1):
+        s = path[i]
+        t = path[i+1]
+        for (u, v, d) in G.edges(data=True):
+            if (s==u and t==v) or (s==v and t==u):
+                weight += d.get('weight')
+    return weight
+
+# Computes the total distance from a vertex to other vertex in G
+def vertex_total_length(G, v):
+    nodes = [n for n in G.nodes]
+    weight = 0
+    for i in nodes:
+        path = nx.shortest_path(G, source=v, target=i)
+        weight += path_length(G, path)
+    return weight
+
+# Return the median vertex
+def median_vertex(G):
+    nodes = [n for n in G.nodes]
+    median = [vertex_total_length(G, n) for n in nodes]
+    return nodes[median.index(min(median))]
+
+def BFS(G, s):
+    # Mark all the vertices as not visited
+    visited = [False] * (len(G.nodes))
+
+    # Create a queue for BFS
+    queue = []
+    order = []
+    # Mark the source node as
+    # visited and enqueue it
+    queue.append(s)
+    visited[s] = True
+
+
+    while queue:
+        # Dequeue a vertex from
+        # queue and print it
+        s = queue.pop(0)
+        start = s
+        # Get all adjacent vertices of the
+        # dequeued vertex s. If a adjacent
+        # has not been visited, then mark it
+        # visited and enqueue it
+        for i in G.neighbors(s):
+            if visited[i] == False:
+                queue.append(i)
+                visited[i] = True
+                end = i
+                order.append([start, end])
+    return order
+
 
 def solve(G):
     """
@@ -23,35 +100,28 @@ def solve(G):
     # TODO: your code here!
 
     """
-    First Algorithm
-    1. MST
-    2. update = True
-    while (updated == True):
-        for loop iterate |E| times:
-            update = False
-            e = max(edge)
-            if (remove(e) disconnect or invalidate(G)):
-                exclude(e)
-                continue
-            if (cost(remove(e)) <= cost(g)):
-                remove(e)
-                update = True
-    return G
 
-    def disconnect():
-    def invalidate(): is_valid_network(G, T)
-    def cost(): average_pairwise_distance(T)
 
     """
+    nodes = [n for n in G.nodes]
+    median = median_vertex(G)
+    order = BFS(G, median)
 
-    # MST
-    T = nx.minimum_spanning_tree(G)
+    T = nx.Graph()
+    T.add_node(median)
+    count = 0
+    while not is_valid_network(G, T):
+        s, t = order[count][0], order[count][1]
+        for (u, v, d) in G.edges(data=True):
+            if (s==u and t==v) or (s==v and t==u):
+                w = d.get('weight')
+                break
+        T.add_edge(s, t, weight=w)
+        count += 1
 
     # Update
     update = True
-    # count = 0
     while update == True:
-        # count += 1
         avaliable_edge = T.copy()
         update = False
         updated = False     # as long as current tree is modified, this is set to be True
@@ -89,13 +159,10 @@ def solve(G):
 
         # Keep iterate
         update = updated
-        # print(count, "-th iteration")
 
-    # T.remove_edge(0, 1) # leave node 0 alone with degree 0
-    # T.remove_node(0) # remove e(0, 1) automatically
-    # T.remove_node(0)
-    # T = nx.algorithms.approximation.min_weighted_dominating_set()
     return T
+
+
 
 # Here's an example of how to run your solver.
 
