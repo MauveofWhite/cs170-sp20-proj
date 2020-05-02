@@ -46,49 +46,50 @@ def solve(G):
     T = nx.minimum_spanning_tree(G)
 
     # Update
-    update = True
-    while update == True:
-        avaliable_edge = T.copy()
-        update = False
-        updated = False     # as long as current tree is modified, this is set to be True
-        for i in range(T.number_of_edges()):
-            # First compute the max edge avaliable
-            e = max_edge(avaliable_edge)
-            # Try remove the edge
-            node_to_remove = None
-            test = T.copy()
-            test.remove_edge(e[0], e[1])
-            if (test.degree[e[0]] == 0):
-                test.remove_node(e[0])
-                node_to_remove = e[0]
-            else:
-                test.remove_node(e[1])
-                node_to_remove = e[1]
-
-            # print(i, "-th iteration, try remove ", e[0], " and ", e[1])
-            # Check if remove is valid and helpful
-            if not is_valid_network(G, test):
-                avaliable_edge.remove_edge(e[0], e[1])
-                # print(i, "               can't remove ", e[0], " and ", e[1])
-                # print()
-                continue
-            if average_pairwise_distance(test) < average_pairwise_distance(T):
-                # print("                 previous cost: ", average_pairwise_distance(T))
-                # print("                 After removing cost: ", average_pairwise_distance(test))
-                T.remove_node(node_to_remove)
-                avaliable_edge.remove_edge(e[0], e[1])
-                updated = True
-                # print(i, "               can remove ", e[0], " and ", e[1])
-                # print()
-                # continue      # do not start over
-                break           # start over
-
-        # Keep iterate
-        update = updated
+    # update = True
+    # while update == True:
+    #     avaliable_edge = T.copy()
+    #     update = False
+    #     updated = False     # as long as current tree is modified, this is set to be True
+    #     for i in range(T.number_of_edges()):
+    #         # First compute the max edge avaliable
+    #         e = max_edge(avaliable_edge)
+    #         # Try remove the edge
+    #         node_to_remove = None
+    #         test = T.copy()
+    #         test.remove_edge(e[0], e[1])
+    #         if (test.degree[e[0]] == 0):
+    #             test.remove_node(e[0])
+    #             node_to_remove = e[0]
+    #         else:
+    #             test.remove_node(e[1])
+    #             node_to_remove = e[1]
+    #
+    #         # print(i, "-th iteration, try remove ", e[0], " and ", e[1])
+    #         # Check if remove is valid and helpful
+    #         if not is_valid_network(G, test):
+    #             avaliable_edge.remove_edge(e[0], e[1])
+    #             # print(i, "               can't remove ", e[0], " and ", e[1])
+    #             # print()
+    #             continue
+    #         if average_pairwise_distance(test) < average_pairwise_distance(T):
+    #             # print("                 previous cost: ", average_pairwise_distance(T))
+    #             # print("                 After removing cost: ", average_pairwise_distance(test))
+    #             T.remove_node(node_to_remove)
+    #             avaliable_edge.remove_edge(e[0], e[1])
+    #             updated = True
+    #             # print(i, "               can remove ", e[0], " and ", e[1])
+    #             # print()
+    #             # continue      # do not start over
+    #             break           # start over
+    #
+    #     # Keep iterate
+    #     update = updated
 
     # T.remove_edge(0, 1) # leave node 0 alone with degree 0
     # T.remove_node(0) # remove e(0, 1) automatically
     # T.remove_node(0)
+    T = nx.algorithms.approximation.dominating_set(G)
     return T
 
 # Here's an example of how to run your solver.
@@ -100,10 +101,10 @@ if __name__ == '__main__':
     path = sys.argv[1]
     G = read_input_file(path)
     T = solve(G)
-    assert is_valid_network(G, T)
-    print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
-    write_output_file(T, 'out/test.out')
-    # print(T)
+    # assert is_valid_network(G, T)
+    # print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
+    # write_output_file(T, 'out/test.out')
+    print(T)
 #
 # if __name__ == "__main__":
 #     output_dir = "outputs"

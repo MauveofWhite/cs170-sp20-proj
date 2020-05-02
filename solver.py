@@ -3,6 +3,8 @@ from parse import *
 from utils import is_valid_network, average_pairwise_distance
 import sys
 import os
+from networkx.algorithms import approximation
+from networkx.algorithms.approximation import *
 
 def max_edge(G):
     weights = [d for (u, v, d) in G.edges(data=True)]
@@ -82,8 +84,8 @@ def solve(G):
                 updated = True
                 # print(i, "               can remove ", e[0], " and ", e[1])
                 # print()
-                continue      # do not start over
-                # break           # start over
+                # continue      # do not start over
+                break           # start over
 
         # Keep iterate
         update = updated
@@ -92,28 +94,28 @@ def solve(G):
     # T.remove_edge(0, 1) # leave node 0 alone with degree 0
     # T.remove_node(0) # remove e(0, 1) automatically
     # T.remove_node(0)
-
+    # T = nx.algorithms.approximation.min_weighted_dominating_set()
     return T
 
 # Here's an example of how to run your solver.
 
 # Usage: python3 solver.py test.in
 
-# if __name__ == '__main__':
-#     assert len(sys.argv) == 2
-#     path = sys.argv[1]
-#     G = read_input_file(path)
-#     T = solve(G)
-#     assert is_valid_network(G, T)
-#     print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
-#     write_output_file(T, 'out/test.out')
-#     # print(T)
-#
-if __name__ == "__main__":
-    output_dir = "outputs"
-    input_dir = "inputs"
-    for input_path in os.listdir(input_dir):
-        graph_name = input_path.split(".")[0]
-        G = read_input_file(f"{input_dir}/{input_path}")
-        T = solve(G)
-        write_output_file(T, f"{output_dir}/{graph_name}.out")
+if __name__ == '__main__':
+    assert len(sys.argv) == 2
+    path = sys.argv[1]
+    G = read_input_file(path)
+    T = solve(G)
+    assert is_valid_network(G, T)
+    print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
+    write_output_file(T, 'out/test.out')
+    # print(T)
+# #
+# if __name__ == "__main__":
+#     output_dir = "outputs"
+#     input_dir = "inputs"
+#     for input_path in os.listdir(input_dir):
+#         graph_name = input_path.split(".")[0]
+#         G = read_input_file(f"{input_dir}/{input_path}")
+#         T = solve(G)
+#         write_output_file(T, f"{output_dir}/{graph_name}.out")
