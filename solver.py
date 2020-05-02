@@ -201,21 +201,21 @@ def solve(G):
 
 # Usage: python3 solver.py test.in
 
-if __name__ == '__main__':
-    assert len(sys.argv) == 2
-    path = sys.argv[1]
-    G = read_input_file(path)
-    T = solve(G)
-    assert is_valid_network(G, T)
-    print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
-    write_output_file(T, 'out/test.out')
-    # print(T)
+# if __name__ == '__main__':
+#     assert len(sys.argv) == 2
+#     path = sys.argv[1]
+#     G = read_input_file(path)
+#     T = solve(G)
+#     assert is_valid_network(G, T)
+#     print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
+#     write_output_file(T, 'out/test.out')
+#     # print(T)
 #
-# if __name__ == "__main__":
-#     output_dir = "outputs"
-#     input_dir = "inputs"
-#     for input_path in os.listdir(input_dir):
-#         graph_name = input_path.split(".")[0]
-#         G = read_input_file(f"{input_dir}/{input_path}")
-#         T = solve(G)
-#         write_output_file(T, f"{output_dir}/{graph_name}.out")
+if __name__ == "__main__":
+    output_dir = "outputs"
+    input_dir = "inputs"
+    for input_path in os.listdir(input_dir):
+        graph_name = input_path.split(".")[0]
+        G = read_input_file(f"{input_dir}/{input_path}")
+        T = solve(G)
+        write_output_file(T, f"{output_dir}/{graph_name}.out")
