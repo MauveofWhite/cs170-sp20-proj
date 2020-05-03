@@ -188,11 +188,12 @@ def solve(G):
         # if both endpoints are connected, we don't add the edge
         add_path(test, min_path, G)
         try:
-            print(list(nx.find_cycle(test)))
+            nx.find_cycle(test)
         except:
             add_path(T, min_path, G)
 
     update(T)
+    print("All Done")
     return T
 
 
