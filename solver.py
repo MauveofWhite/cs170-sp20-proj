@@ -156,16 +156,26 @@ def solve(G):
 
 
     """
-    # MST
-    T = nx.minimum_spanning_tree(G)
+    # Try every possible dominating set
+    all_set = [] # 2-d list
+    for n in G.nodes:
+        dom_set = nx.dominating_set(G, n)
+        # dominating set nodes
+        temp = []
+        for e in dom_set:
+            temp.append(e)
+        # Only add unique set
+        if temp not in all_set:
+            all_set.append(temp)
 
-    # Update
+
+    # Compare all sets' cost
+    all_mst = [set_mst(G, set) for set in all_set]
+    cost = [average_pairwise_distance(mst) for mst in all_mst]
+    min_ind = cost.index(min(cost))
+    T = all_mst[min_ind]
     update(T)
 
-    # T.remove_edge(0, 1) # leave node 0 alone with degree 0
-    # T.remove_node(0) # remove e(0, 1) automatically
-    # T.remove_node(0)
-    # T = nx.algorithms.approximation.dominating_set(G)
     return T
 
 
@@ -183,7 +193,7 @@ def solve(G):
 #     print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
 #     write_output_file(T, 'out/test.out')
 #     # print(T)
-#
+
 if __name__ == "__main__":
     output_dir = "outputs"
     input_dir = "inputs"
