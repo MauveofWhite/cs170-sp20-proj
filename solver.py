@@ -134,8 +134,8 @@ def update(T):
                     updated = True
                     # print(i, "               can remove ", e[0], " and ", e[1])
                     # print()
-                    # continue      # do not start over
-                    break           # start over
+                    continue      # do not start over
+                    # break           # start over
 
             # Keep iterate
             update = updated
@@ -156,44 +156,16 @@ def solve(G):
 
 
     """
-    # Find the median vertex and dominating set including mv
-    nodes = [n for n in G.nodes]
-    median = median_vertex(G)
-    dom_set = nx.dominating_set(G, median) # type = set
-    dom_set = [e for e in dom_set] # [2, 4]
+    # MST
+    T = nx.minimum_spanning_tree(G)
 
-    print(len(dom_set))
-    # Find the paths of all combinations of vertices in dom set
-    path = []
-    for i in range(len(dom_set)-1):
-        for j in range(i+1, len(dom_set)):
-            s = dom_set[i]
-            t = dom_set[j]
-            path.append(nx.shortest_path(G, source=s, target=t))
-
-
-    T = nx.Graph()
-    T.add_node(median)
-
-    # Add minimum edge until dom set is connected
-    while not is_valid_network(G, T):
-        # Each time we find the min edge
-        path_len = [path_length(G, p) for p in path]
-        min_path = path[path_len.index(min(path_len))]
-        path.remove(min_path)
-        test = T.copy()
-
-        # print("start point: ", min_path[0], '   end point: ', min_path[len(min_path)-1])
-
-        # if both endpoints are connected, we don't add the edge
-        add_path(test, min_path, G)
-        try:
-            nx.find_cycle(test)
-        except:
-            add_path(T, min_path, G)
-
+    # Update
     update(T)
-    print("All Done")
+
+    # T.remove_edge(0, 1) # leave node 0 alone with degree 0
+    # T.remove_node(0) # remove e(0, 1) automatically
+    # T.remove_node(0)
+    # T = nx.algorithms.approximation.dominating_set(G)
     return T
 
 
@@ -202,21 +174,21 @@ def solve(G):
 
 # Usage: python3 solver.py test.in
 
-# if __name__ == '__main__':
-#     assert len(sys.argv) == 2
-#     path = sys.argv[1]
-#     G = read_input_file(path)
-#     T = solve(G)
-#     assert is_valid_network(G, T)
-#     print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
-#     write_output_file(T, 'out/test.out')
-#     # print(T)
+if __name__ == '__main__':
+    assert len(sys.argv) == 2
+    path = sys.argv[1]
+    G = read_input_file(path)
+    T = solve(G)
+    assert is_valid_network(G, T)
+    print("Average  pairwise distance: {}".format(average_pairwise_distance(T)))
+    write_output_file(T, 'out/test.out')
+    # print(T)
 #
-if __name__ == "__main__":
-    output_dir = "outputs"
-    input_dir = "inputs"
-    for input_path in os.listdir(input_dir):
-        graph_name = input_path.split(".")[0]
-        G = read_input_file(f"{input_dir}/{input_path}")
-        T = solve(G)
-        write_output_file(T, f"{output_dir}/{graph_name}.out")
+# if __name__ == "__main__":
+#     output_dir = "outputs"
+#     input_dir = "inputs"
+#     for input_path in os.listdir(input_dir):
+#         graph_name = input_path.split(".")[0]
+#         G = read_input_file(f"{input_dir}/{input_path}")
+#         T = solve(G)
+#         write_output_file(T, f"{output_dir}/{graph_name}.out")
